@@ -13,6 +13,8 @@ import org.springframework.context.annotation.*;
 @PropertySource("classpath:suite.properties")
 public class AppConfig {
 
+    //sample bean configurers
+
     @Bean(name = "shellExecutor")
     @Scope("prototype")
     Executor shellExecutor() throws JSchException {

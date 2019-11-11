@@ -19,10 +19,12 @@ public class LoggerTestListener extends AbstractSpringTestListener implements IT
 
     @Override
     public void onTestStart(ITestResult result) {
+        //autowiring doesn't work for TestNG listeners...
         context.getApplicationContext()
                 .getAutowireCapableBeanFactory()
                 .autowireBean(this);
 
+        //setting up log capture to parse memory percentage from ssh stream
         logCaptureMemoryPercentage.setLoggerCommand("python /opt/docker/dockerTestImage/monitor.py\n");
         logCaptureMemoryPercentage.setOutputStrategy((line) -> {
             Pattern pattern = Pattern.compile("'Memory:Percent:', (.*?), 'Total:'");
@@ -31,6 +33,7 @@ public class LoggerTestListener extends AbstractSpringTestListener implements IT
                 System.out.println("PARSED_MEMORY_PERCENT_USAGE_IS: " + matcher.group(1));
         });
 
+        //setting up log capture to parse memory MB values from ssh stream
         logCaptureMemoryUsage.setLoggerCommand("python /opt/docker/dockerTestImage/monitor.py\n");
         logCaptureMemoryUsage.setOutputStrategy((line) -> {
             Pattern pattern = Pattern.compile("'Used:', (.*?), 'MB'");

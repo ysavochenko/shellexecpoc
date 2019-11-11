@@ -22,7 +22,7 @@
     </build>
 
     <properties>
-        <spring.framework>4.3.0.RELEASE</spring.framework>
+        <spring.framework>5.2.1.RELEASE</spring.framework>
     </properties>
 
     <dependencies>

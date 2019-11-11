@@ -58,6 +58,7 @@ public class LogCaptureImplTest extends BaseTest {
 
     @Test
     public void verifyLongScriptExecution() throws Exception {
+        //sample script takes 60s, check how logcapture works in background
         shellExecutor.execute("python " + longScript +"\n" + "exit\n");
     }
 

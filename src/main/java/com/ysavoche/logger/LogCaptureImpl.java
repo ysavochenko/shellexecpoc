@@ -1,18 +1,14 @@
 package com.ysavoche.logger;
 
 import com.ysavoche.shell.Executor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
-@Component
 public class LogCaptureImpl implements LogCapture {
 
-    @Autowired
     private Executor shellExecutor;
     private Consumer<String> outputStrategy;
 
@@ -27,6 +23,10 @@ public class LogCaptureImpl implements LogCapture {
             System.out.println("Thread interruption  was called");
         }
     };
+
+    LogCaptureImpl(Executor executor) {
+        this.shellExecutor = executor;
+    }
 
     private ExecutorService loggerExecutor = Executors.newSingleThreadExecutor();
     private Future futureExecution;

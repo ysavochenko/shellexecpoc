@@ -30,7 +30,6 @@ public class ShellExecutor implements Executor {
 
     private Session session;
     private int exitStatus;
-    private BufferedReader br;
     private Consumer<String> outputStrategy;
 
     private volatile boolean init = false;
@@ -58,14 +57,13 @@ public class ShellExecutor implements Executor {
         channel.setOutputStream(System.out);
         InputStream inputStream = channel.getInputStream();
         exitStatus = -1;
-        br = new BufferedReader(new InputStreamReader(inputStream));
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
         channel.connect();
 
         while (!Thread.currentThread().isInterrupted()) {
             String line;
             while ((line = br.readLine()) != null) {
-//                System.out.println(line);
                 this.outputStrategy.accept(line);
             }
 

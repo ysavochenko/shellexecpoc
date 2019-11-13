@@ -14,6 +14,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+import static com.ysavoche.util.Utils.buildPythonExecutionCommand;
+import static com.ysavoche.util.Utils.buildShellCommand;
+
 
 @ContextConfiguration(classes = AppConfig.class)
 @TestPropertySource("classpath:suite.properties")
@@ -27,10 +30,10 @@ public class LogCaptureImplTest extends BaseTest {
     @Autowired
     private Executor shellExecutor;
 
-    @Value("${script1.location}")
+    @Value("${loadScript1.location}")
     private String sampleScriptLocation;
 
-    @Value("${script2.location}")
+    @Value("${loadScript2.location}")
     private String longScript;
 
 
@@ -45,21 +48,18 @@ public class LogCaptureImplTest extends BaseTest {
 
     @Test
     public void verifyShellExecution() throws Exception {
-
-        //for POC using command as string... ideally it should be some builder, but depends on requirements
-        shellExecutor.execute("hostname\n" + "exit\n");
+        shellExecutor.execute(buildShellCommand("hostname"));
         Assert.assertEquals(shellExecutor.getExitStatus(),0);
-        shellExecutor.execute("ls -l\n" + "exit\n");
+        shellExecutor.execute(buildShellCommand("ls -l"));
         Assert.assertEquals(shellExecutor.getExitStatus(),0);
 
-        shellExecutor.execute("python " + sampleScriptLocation + "\n" + "exit\n");
-        shellExecutor.execute("python " + sampleScriptLocation + "\n" + "exit\n");
+        shellExecutor.execute(buildPythonExecutionCommand(sampleScriptLocation));
     }
 
     @Test
     public void verifyLongScriptExecution() throws Exception {
-        //sample script takes 60s, check how logcapture works in background
-        shellExecutor.execute("python " + longScript +"\n" + "exit\n");
+        //sample script takes 60s to check how logCapture works in background
+        shellExecutor.execute(buildPythonExecutionCommand(longScript));
     }
 
     @AfterClass

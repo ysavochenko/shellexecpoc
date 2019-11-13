@@ -13,7 +13,7 @@ public class RemoteUserInfo implements UserInfo {
     }
 
     public String getPassphrase() {
-        throw new UnsupportedOperationException("getPassphrase Not supported yet.");
+        return "";
     }
 
     public String getPassword() {
@@ -25,7 +25,7 @@ public class RemoteUserInfo implements UserInfo {
     }
 
     public boolean promptPassphrase(String s) {
-        throw new UnsupportedOperationException("promptPassphrase Not supported yet.");
+        return true;
     }
 
     public boolean promptYesNo(String s) {

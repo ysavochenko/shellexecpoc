@@ -1,20 +1,19 @@
 package com.ysavoche.test.listeners;
 
 import com.ysavoche.logger.LogCapture;
+import com.ysavoche.logger.LogCaptureFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class LoggerTestListener extends AbstractSpringTestListener implements ITestListener {
 
     @Autowired
-    private LogCapture logCaptureMemoryPercentage;
+    LogCaptureFactory logCaptureFactory;
 
-    @Autowired
+    //let's assume we require two parallel monitoring loggers
+    private LogCapture logCaptureMemoryPercentage;
     private LogCapture logCaptureMemoryUsage;
 
     @Override
@@ -24,23 +23,10 @@ public class LoggerTestListener extends AbstractSpringTestListener implements IT
                 .getAutowireCapableBeanFactory()
                 .autowireBean(this);
 
-        //setting up log capture to parse memory percentage from ssh stream
-        logCaptureMemoryPercentage.setLoggerCommand("python /opt/docker/dockerTestImage/monitor.py\n");
-        logCaptureMemoryPercentage.setOutputStrategy((line) -> {
-            Pattern pattern = Pattern.compile("'Memory:Percent:', (.*?), 'Total:'");
-            Matcher matcher = pattern.matcher(line);
-            if (matcher.find())
-                System.out.println("PARSED_MEMORY_PERCENT_USAGE_IS: " + matcher.group(1));
-        });
+        //loggers init is done through factory
+        logCaptureMemoryPercentage = logCaptureFactory.getMemoryPercentageLogger();
+        logCaptureMemoryUsage = logCaptureFactory.getMemoryUsageLogger();
 
-        //setting up log capture to parse memory MB values from ssh stream
-        logCaptureMemoryUsage.setLoggerCommand("python /opt/docker/dockerTestImage/monitor.py\n");
-        logCaptureMemoryUsage.setOutputStrategy((line) -> {
-            Pattern pattern = Pattern.compile("'Used:', (.*?), 'MB'");
-            Matcher matcher = pattern.matcher(line);
-            if (matcher.find())
-                System.out.println("PARSED_MEMORY_MB_USED_IS: " + matcher.group(1));
-        });
         logCaptureMemoryPercentage.startLogger();
         logCaptureMemoryUsage.startLogger();
     }

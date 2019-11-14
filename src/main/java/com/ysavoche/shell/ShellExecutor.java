@@ -30,7 +30,7 @@ public class ShellExecutor implements Executor {
 
     private Session session;
     private int exitStatus;
-    private Consumer<String> outputStrategy;
+    private Consumer<String> outputFunction;
 
     private volatile boolean init = false;
 
@@ -46,8 +46,8 @@ public class ShellExecutor implements Executor {
     }
 
     @Override
-    public void setOutputStrategy(Consumer<String> outputStrategy) {
-        this.outputStrategy = outputStrategy;
+    public void setOutputFunction(Consumer<String> outputStrategy) {
+        this.outputFunction = outputStrategy;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ShellExecutor implements Executor {
         while (!Thread.currentThread().isInterrupted()) {
             String line;
             while ((line = br.readLine()) != null) {
-                this.outputStrategy.accept(line);
+                this.outputFunction.accept(line);
             }
 
             if (channel.isClosed()) {

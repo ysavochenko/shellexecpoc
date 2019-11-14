@@ -1,21 +1,21 @@
 package com.ysavoche.logger;
 
+import com.ysavoche.logger.output.OutputStrategy;
 import com.ysavoche.shell.Executor;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.function.Consumer;
 
 public class LogCaptureImpl implements LogCapture {
 
     private Executor shellExecutor;
-    private Consumer<String> outputStrategy;
+    private OutputStrategy outputStrategy;
 
     private String command;
 
     private Runnable loggerTask = ()-> {
-        shellExecutor.setOutputStrategy(this.outputStrategy);
+        shellExecutor.setOutputFunction(this.outputStrategy.getConsumer());
         initShellExecutor();
         try {
             shellExecutor.execute(command + "\n");
@@ -32,7 +32,7 @@ public class LogCaptureImpl implements LogCapture {
     private Future futureExecution;
 
     @Override
-    public void setOutputStrategy(Consumer<String> outputStrategy) {
+    public void setOutputStrategy(OutputStrategy outputStrategy) {
         this.outputStrategy = outputStrategy;
     }
 
@@ -40,7 +40,7 @@ public class LogCaptureImpl implements LogCapture {
         try {
             shellExecutor.initConnection();
         } catch (Exception e) {
-            // Force to stop thread
+            // Force stop thread
             throw new RuntimeException(e);
         }
     }
@@ -52,7 +52,6 @@ public class LogCaptureImpl implements LogCapture {
             throw new RuntimeException("Something went wrong... Please investigate", e);
         }
     }
-
 
 
     @Override

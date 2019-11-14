@@ -7,7 +7,7 @@ public interface Executor {
     void initConnection() throws Exception;
     void execute(String path) throws Exception;
     void closeSession() throws Exception;
-    void setOutputStrategy(Consumer<String> outputStrategy);
+    void setOutputFunction(Consumer<String> outputStrategy);
 
     int getExitStatus();
 

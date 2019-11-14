@@ -12,11 +12,11 @@ public class LogCaptureFactory {
     @Autowired
     private LogCaptureMemoryUsageBuilder logCaptureMemoryUsageBuilder;
 
-    public LogCapture getMemoryPercentageLogger() {
-        return logCaptureMemoryPercentageBuilder.build();
+    public LogCapture getMemoryPercentageLogger(String outPutFileName) {
+        return logCaptureMemoryPercentageBuilder.build(outPutFileName);
     }
 
-    public LogCapture getMemoryUsageLogger() {
-        return logCaptureMemoryUsageBuilder.build();
+    public LogCapture getMemoryUsageLogger(String outPutFileName) {
+        return logCaptureMemoryUsageBuilder.build(outPutFileName);
     }
 }

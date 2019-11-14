@@ -1,6 +1,6 @@
 package com.ysavoche.logger;
 
-import java.util.function.Consumer;
+import com.ysavoche.logger.output.OutputStrategy;
 
 public interface LogCapture {
 
@@ -10,6 +10,6 @@ public interface LogCapture {
 
     void setLoggerCommand(String command);
 
-    void setOutputStrategy(Consumer<String> outputStrategy);
+    void setOutputStrategy(OutputStrategy outputStrategy);
 
 }

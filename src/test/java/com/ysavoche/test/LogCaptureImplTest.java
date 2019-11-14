@@ -43,7 +43,7 @@ public class LogCaptureImplTest extends BaseTest {
     @BeforeClass
     void init() throws Exception {
         shellExecutor.initConnection();
-        shellExecutor.setOutputStrategy(System.out::println);
+        shellExecutor.setOutputFunction(System.out::println);
     }
 
     @Test

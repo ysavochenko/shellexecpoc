@@ -17,6 +17,7 @@ public class FileOutputStrategyImpl implements OutputStrategy {
         this.outConsumer = (line) -> {
             String filteredOutput = inFunction.apply(line);
             if (!filteredOutput.equals("")) {
+
                 String outputToPersist = new StringJoiner("|","","\n")
                         .add(LocalDateTime.now().toString())
                         .add(filteredOutput).toString();

@@ -26,16 +26,16 @@ class LogCaptureMemoryPercentageBuilder {
         LogCapture logCaptureMemoryPercentage = new LogCaptureImpl(shellExecutor);
         logCaptureMemoryPercentage.setLoggerCommand(buildPythonExecutionCommand(monitoringScript));
 
-        Function<String, String> outputParser = (line) -> {
+        Function<String, String> outputParserFunction = (line) -> {
             Pattern pattern = Pattern.compile("'Memory:Percent:', (.*?), 'Total:'");
             Matcher matcher = pattern.matcher(line);
             String out = "";
             if (matcher.find())
-                return matcher.group(1);
+                out = matcher.group(1);
             return out;
         };
 
-        OutputStrategy fileOutputStrategy = new FileOutputStrategyImpl(outputParser,
+        OutputStrategy fileOutputStrategy = new FileOutputStrategyImpl(outputParserFunction,
                 outPutFileName);
 
         logCaptureMemoryPercentage.setOutputStrategy(fileOutputStrategy);

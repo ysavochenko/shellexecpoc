@@ -36,8 +36,6 @@ public class LogCaptureImplTest extends BaseTest {
     @Value("${loadScript2.location}")
     private String longScript;
 
-
-
     //shellExecutor will be used to execute some scripts to perform some load on system
     //so we have to init ssh connection
     @BeforeClass

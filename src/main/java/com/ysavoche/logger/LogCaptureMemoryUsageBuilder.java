@@ -26,16 +26,16 @@ class LogCaptureMemoryUsageBuilder {
         LogCapture logCaptureMemoryUsage = new LogCaptureImpl(shellExecutor);
         logCaptureMemoryUsage.setLoggerCommand(buildPythonExecutionCommand(monitoringScript));
 
-        Function<String, String> outputParser = (line) -> {
+        Function<String, String> outputParserFunction = (line) -> {
             Pattern pattern = Pattern.compile("'Used:', (.*?), 'MB'");
             Matcher matcher = pattern.matcher(line);
             String out = "";
             if (matcher.find())
-                return matcher.group(1);
+                out =  matcher.group(1);
             return out;
         };
 
-        OutputStrategy fileOutputStrategy = new FileOutputStrategyImpl(outputParser,
+        OutputStrategy fileOutputStrategy = new FileOutputStrategyImpl(outputParserFunction,
                 outPutFileName);
 
         logCaptureMemoryUsage.setOutputStrategy(fileOutputStrategy);

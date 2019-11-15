@@ -4,6 +4,7 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import io.qameta.allure.Step;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -51,6 +52,7 @@ public class ShellExecutor implements Executor {
     }
 
     @Override
+    @Step("Executing shell command: {0} ...")
     public void execute(String commandToExecute) throws Exception {
         Channel channel = session.openChannel("shell");
         channel.setInputStream(new ByteArrayInputStream(commandToExecute.getBytes(StandardCharsets.UTF_8)));

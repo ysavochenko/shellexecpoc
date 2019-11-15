@@ -44,7 +44,7 @@ public class LogCaptureImplTest extends BaseTest {
         shellExecutor.setOutputFunction(System.out::println);
     }
 
-    @Test
+    @Test(description="Verify that suite can execute commands through ssh")
     public void verifyShellExecution() throws Exception {
         shellExecutor.execute(buildShellCommand("hostname"));
         Assert.assertEquals(shellExecutor.getExitStatus(),0);
@@ -54,7 +54,7 @@ public class LogCaptureImplTest extends BaseTest {
         shellExecutor.execute(buildPythonExecutionCommand(sampleScriptLocation));
     }
 
-    @Test
+    @Test(description="Verify long script execution")
     public void verifyLongScriptExecution() throws Exception {
         //sample script takes 60s to check how logCapture works in background
         shellExecutor.execute(buildPythonExecutionCommand(longScript));

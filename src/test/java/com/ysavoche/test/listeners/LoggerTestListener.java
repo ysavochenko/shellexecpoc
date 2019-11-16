@@ -5,7 +5,6 @@ import com.ysavoche.logger.LogCaptureFactory;
 import io.qameta.allure.Allure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
@@ -14,6 +13,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 import static com.ysavoche.util.Utils.buildLogCaptureOutputFileName;
 
@@ -43,7 +43,6 @@ public class LoggerTestListener extends AbstractSpringTestListener implements IT
                 .getAutowireCapableBeanFactory()
                 .autowireBean(this);
 
-
         //setting filenames which will be used to store outputs
         logCaptureMemoryPercentageOutFileName = buildLogCaptureOutputFileName(logCaptureMemoryPercentageOutPutLocation,
                 result.getMethod().getMethodName(),
@@ -61,20 +60,30 @@ public class LoggerTestListener extends AbstractSpringTestListener implements IT
     }
 
     @Override
-    public void onFinish(ITestContext context) {
+    public void onTestSuccess(ITestResult result) {
         stopLoggers();
-        System.out.println("About to attach output files...");
-        Path fileName = Paths.get(logCaptureMemoryPercentageOutFileName);
-        try (InputStream io = Files.newInputStream(fileName)) {
-            Allure.addAttachment("newFileName","text/csv", io,"");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
+    @Override
+    public void onTestFailure(ITestResult result) {
+        stopLoggers();
+    }
+
+    private void attachOutputs(String[] files) {
+        Arrays.stream(files).forEach(file -> {
+            Path fileName = Paths.get(file);
+            System.out.println("About to attach output file...");
+            try (InputStream io = Files.newInputStream(fileName)) {
+                Allure.addAttachment(fileName.getFileName().toString(), "text/csv", io, "");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
     private void stopLoggers() {
         logCaptureMemoryPercentage.stopLogger();
         logCaptureMemoryUsage.stopLogger();
+        attachOutputs(new String[]{logCaptureMemoryPercentageOutFileName, logCaptureMemoryUsageOutPutFileName});
     }
 }

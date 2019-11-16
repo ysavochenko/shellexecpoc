@@ -15,9 +15,11 @@ public class FileOutputStrategyImpl implements OutputStrategy {
 
     public FileOutputStrategyImpl(Function<String, String> inFunction, String filename) {
         this.outConsumer = (line) -> {
+            //here we get some filtered output
             String filteredOutput = inFunction.apply(line);
             if (!filteredOutput.equals("")) {
 
+                //let's assume we want to save it into csv
                 String outputToPersist = new StringJoiner("|","","\n")
                         .add(LocalDateTime.now().toString())
                         .add(filteredOutput).toString();
